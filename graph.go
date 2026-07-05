@@ -239,26 +239,8 @@ func (v *Vertex[T]) Degree() int {
 func (v *Vertex[T]) Neighbors() []*Vertex[T] {
 	var neighbors []*Vertex[T]
 	for i := range v.neighbors {
-		clone := &Vertex[T]{
-			label:      v.neighbors[i].label,
-			inDegree:   v.neighbors[i].inDegree,
-			properties: v.neighbors[i].properties,
-		}
-
-		// Deep copy neighbors array (prevents aliasing)
-		if len(v.neighbors[i].neighbors) > 0 {
-			clone.neighbors = make([]*Vertex[T], len(v.neighbors[i].neighbors))
-			for j, n := range v.neighbors[i].neighbors {
-				clone.neighbors[j] = &Vertex[T]{
-					label:      n.label,
-					inDegree:   n.inDegree,
-					properties: n.properties,
-				}
-			}
-		}
-
-		// Copy metadata - note: complex types still share references by design
-		clone.metadata = v.neighbors[i].metadata
+		clone := &Vertex[T]{}
+		*clone = *v.neighbors[i]
 		neighbors = append(neighbors, clone)
 	}
 
